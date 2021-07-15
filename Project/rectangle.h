@@ -1,0 +1,71 @@
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+
+#include"globals.h"
+#include"slope.h"
+
+namespace rect_globals {
+	const int PROJECTILE = 10;
+}
+
+
+class Rectangle {
+public:
+	Rectangle() {}
+
+	Rectangle(int x, int y, int width, int height) :
+		_x(x),
+		_y(y),
+		_width(width),
+		_height(height)
+	{}
+
+	const int getCenterX() const { return this->_x + this->_width / 2; }
+	const int getCenterY() const { return this->_y + this->_height / 2; }
+
+	const int getLeft() const { return this->_x; }
+	const int getRight() const { return this->_x + this->_width; }
+	const int getTop() const { return this->_y; }
+	const int getBottom() const { return this->_y + this->_height; }
+
+	const int getWidth() const { return this->_width; }
+	const int getHeight() const { return this->_height; }
+
+	const int getSide(const sides::Side side) const {
+		return
+			side == sides::LEFT ? this->getLeft() :
+			side == sides::RIGHT ? this->getRight() :
+			side == sides::TOP ? this->getTop() :
+			side == sides::BOTTOM ? this->getBottom() :
+			sides::NONE;
+	}
+	//bool collidesWith
+	//takes in another rectangle and checks if the two are colliding
+	const bool collidesWith(const Rectangle &other) const {
+		return
+			this->getRight() >= other.getLeft() &&
+			this->getLeft() <= other.getRight() &&
+			this->getTop() <= other.getBottom() &&
+			this->getBottom() >= other.getTop();
+	}
+
+	const bool collidesWithProj(const Rectangle &other) const {
+		return
+			this->getRight() >= other.getLeft()+rect_globals::PROJECTILE &&
+			this->getLeft() <= other.getRight()-rect_globals::PROJECTILE &&
+			this->getTop() <= other.getBottom()-rect_globals::PROJECTILE &&
+			this->getBottom() >= other.getTop()+rect_globals::PROJECTILE;
+	}
+
+	const bool isValidRectangle() const {
+		return (this->_x >= 0 && this->_y >= 0 && this->_width >= 0 && this->_height >= 0);
+	}
+
+private:
+	int _x, _y, _width, _height;
+
+};
+
+
+
+#endif // !RECTANGLE_H
